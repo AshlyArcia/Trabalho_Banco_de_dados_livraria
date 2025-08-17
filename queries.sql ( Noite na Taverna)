@@ -1,0 +1,45 @@
+-- 1. Listar todos os usuários cadastrados
+SELECT id_usuario, nome, tipo
+FROM Usuario;
+
+-- 2. Listar todos os livros com seus autores
+SELECT l.titulo, a.nome AS autor
+FROM Livro l
+JOIN Livro_Autor la ON l.id_livro = la.id_livro
+JOIN Autor a ON la.id_autor = a.id_autor
+ORDER BY l.titulo;
+
+-- 3. Buscar especificamente o livro "Noite na Taverna" e seu autor
+SELECT l.titulo, a.nome AS autor
+FROM Livro l
+JOIN Livro_Autor la ON l.id_livro = la.id_livro
+JOIN Autor a ON la.id_autor = a.id_autor
+WHERE l.titulo = 'Noite na Taverna';
+
+-- 4. Ver todos os empréstimos do livro "Noite na Taverna"
+SELECT e.id_emprestimo, u.nome AS usuario, e.data_emprestimo, e.data_devolucao
+FROM Emprestimo e
+JOIN Usuario u ON e.id_usuario = u.id_usuario
+JOIN Livro l ON e.id_livro = l.id_livro
+WHERE l.titulo = 'Noite na Taverna';
+
+-- 5. Mostrar quais usuários ainda estão com "Noite na Taverna" emprestado
+SELECT u.nome AS usuario, e.data_emprestimo
+FROM Emprestimo e
+JOIN Usuario u ON e.id_usuario = u.id_usuario
+JOIN Livro l ON e.id_livro = l.id_livro
+WHERE l.titulo = 'Noite na Taverna' AND e.data_devolucao IS NULL;
+
+-- 6. Contar quantas vezes "Noite na Taverna" já foi emprestado
+SELECT l.titulo, COUNT(e.id_emprestimo) AS total_emprestimos
+FROM Emprestimo e
+JOIN Livro l ON e.id_livro = l.id_livro
+WHERE l.titulo = 'Noite na Taverna'
+GROUP BY l.titulo;
+
+-- 7. (Extra) Listar todos os livros do autor Álvares de Azevedo
+SELECT a.nome AS autor, l.titulo
+FROM Autor a
+JOIN Livro_Autor la ON a.id_autor = la.id_autor
+JOIN Livro l ON la.id_livro = l.id_livro
+WHERE a.nome = 'Álvares de Azevedo';
